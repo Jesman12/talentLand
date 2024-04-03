@@ -100,12 +100,11 @@ const styles = StyleSheet.create({
     backgroundColor: 'rgba(0, 0, 0, 0.5)',
   },
   modalContent: {
-
-  },
-  scrollViewContainer: {
     backgroundColor: 'white',
     padding: 20,
+    margin: 0,
     borderRadius: 10,
+    minHeight: '10%',
     maxHeight: '80%', // Ajusta la altura máxima del contenido si es necesario
   },
 });
