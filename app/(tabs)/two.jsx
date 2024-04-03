@@ -6,6 +6,7 @@ import ModalInfo from '../ModalInfo'
 
 export default function TabTwoScreen() {
   const [selectedDate, setSelectedDate] = useState('2024-04-02');
+  const [selectedSensor, setSensor] = useState('');
   const [modalVisible, setModalVisible] = useState(false);
   const [chartDataCaudal, setChartDataCaudal] = useState(null);
   const [chartDataLavamanos, setChartDataLavamanos] = useState(null);
@@ -39,12 +40,15 @@ export default function TabTwoScreen() {
       .catch(error => console.error('Error fetching data:', error));
   };
 
+  function handlerModal(visible, sensor){
+    setModalVisible(visible);
+    setSensor(sensor);
+  } 
+
   return (
-    <View style={styles.container}>
-      <Button title="Ver información adicional" onPress={() => setModalVisible(true)} />
-      
+    <View style={styles.container}>      
       {/* Modal */}
-      <ModalInfo modalVisible={modalVisible} setModalVisible={setModalVisible} />
+      <ModalInfo modalVisible={modalVisible} setModalVisible={setModalVisible} sensor={selectedSensor} selectedDate={selectedDate}/>
       
       <Text>Seleccione una fecha:</Text>
       <Picker
@@ -54,10 +58,11 @@ export default function TabTwoScreen() {
       >
         <Picker.Item label="2024-04-01" value="2024-04-01" />
         <Picker.Item label="2024-04-02" value="2024-04-02" />
+        <Picker.Item label="2024-04-03" value="2024-04-03" />
         <Picker.Item label="Otra fecha..." value="other" />
       </Picker>
       
-      <Pressable onPress={() => setModalVisible(true)}>
+      <Pressable onPress={() => handlerModal(true, 'regadera')}>
         <Text>Regadera</Text>
         {chartDataCaudal && (
           <LineChart
@@ -98,7 +103,7 @@ export default function TabTwoScreen() {
         )}
       </Pressable>
 
-      <Pressable onPress={() => setModalVisible(true)}>
+      <Pressable onPress={() => handlerModal(true, 'lavamanos')}>
         <Text>Lava Manos</Text>
         {chartDataLavamanos && (
           <LineChart

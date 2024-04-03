@@ -1,12 +1,77 @@
 // ModalInfo.js
-import React from 'react';
-import { Modal, Button, View, Text, StyleSheet } from 'react-native';
+import React, { useEffect, useState } from 'react';
+import { Modal, Button, View, Text, StyleSheet, ScrollView } from 'react-native';
 
-export default function ModalInfo({ modalVisible, setModalVisible }) {
+export default function ModalInfo({ modalVisible, setModalVisible, sensor, selectedDate }) {
+  const [resultIA, setResultIA] = useState('');
 
-  const mensaje = "¡Alerta roja! Acabo de revisar tus datos de consumo diario de agua y estoy profundamente preocupado. ¡Estás desperdiciando una cantidad alarmante de agua preciosa!\n\nSegún tus datos, tu consumo diario total es de:\n\n**6,0 litros (lava manos) + 6,1 litros (lava manos) + 6,0 litros (regadera) + 6,1 litros (regadera) = 24,2 litros**\n\n¡Esta cifra es aterradora! La media recomendada para el ahorro de agua es de solo 120 litros por persona y día. ¡Estás consumiendo casi el doble de la cantidad recomendada!\n\nEsto no solo es un despilfarro de uno de los recursos más valiosos de nuestro planeta, sino que también es un daño ambiental importante. El proceso de purificación y distribución de agua requiere una enorme cantidad de energía. Al reducir tu consumo, puedes ayudar a reducir las emisiones de gases de efecto invernadero y proteger nuestro medio ambiente.\n\nTe ordeno encarecidamente que tomes medidas inmediatas para disminuir tu consumo de agua. Cierra los grifos cuando no los estés usando, toma duchas más cortas y repara cualquier fuga. Cada gota de agua que ahorres marca la diferencia.\n\n¡Actúa ahora! ¡El futuro de nuestro planeta depende de ello!";
+  useEffect(() => {
+    setResultIA('Cargando respuesta...');
+    if(modalVisible){
+      fetchData(sensor, selectedDate);
+    }
+  }, [sensor, modalVisible]);
 
-  const mensajeConSaltosDeLinea = mensaje.replace(/\\n/g, '\n');
+  const fetchData = (type, date) => {
+      fetch('https://domint.com.mx/api/v1/sensor/', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/x-www-form-urlencoded'
+        },
+        body: new URLSearchParams({
+          action: 'getDataByDate',
+          date,
+          type
+        }).toString()
+      })
+      .then(response => response.json())
+      .then(data => {
+        console.log(data);
+        fetchAI(data);
+      })
+      .catch(error => console.error('Error fetching data:', error));
+  };
+
+  let mensajeConSaltosDeLinea = "";
+  const fetchAI = (datos) => {
+    let prompt = "Enlista consejos sobre cómo disminuir mi consumo diario de agua, además, proporciona datos específicos actuando como si fueras ambientalista y regañándome si es necesario. En base a los datos proporcionados especifica cuanto tiempo en litros de consumo se uso el agua y compararlo con la media recomendada para el ahorro de agua. Usando exclusivamente estos datos de consumo diario:";
+    prompt = prompt + JSON.stringify(datos);
+
+    const raw = JSON.stringify({
+      "contents": [
+        {
+          "parts": [
+            {
+              "text": prompt
+            }
+          ]
+        }
+      ]
+    });
+
+    fetch('https://generativelanguage.googleapis.com/v1/models/gemini-pro:generateContent?key=AIzaSyCy0BGZXJtktcBJZ1HnaKfl27bG0QqNnwo', {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json'
+      },
+      body: raw
+    })
+    .then((response) => response.json())
+    .then((result) => {
+      console.log(result);
+      if (result && result.candidates && result.candidates.length > 0) {
+        const text = result.candidates[0].content.parts[0].text;
+        console.log(text);
+        mensajeConSaltosDeLinea = text.replace(/\\n/g, '\n');
+        setResultIA(mensajeConSaltosDeLinea);
+      } else {
+          console.log("Ha ocurrido un error con la API");
+          setResultIA('');
+      }
+      
+    })
+    .catch(error => console.error('Error fetching data:', error));
+};
 
   return (
     <Modal
@@ -16,12 +81,12 @@ export default function ModalInfo({ modalVisible, setModalVisible }) {
       onRequestClose={() => setModalVisible(false)}
     >
       <View style={styles.modalContainer}>
-        <View style={styles.modalContent}>
+        <ScrollView style={styles.modalContent}>
           <Text>
-            {mensajeConSaltosDeLinea}
+            {resultIA}
           </Text>
           <Button title="Cerrar" onPress={() => setModalVisible(false)} />
-        </View>
+        </ScrollView>
       </View>
     </Modal>
   );
@@ -35,9 +100,12 @@ const styles = StyleSheet.create({
     backgroundColor: 'rgba(0, 0, 0, 0.5)',
   },
   modalContent: {
+
+  },
+  scrollViewContainer: {
     backgroundColor: 'white',
     padding: 20,
     borderRadius: 10,
-    elevation: 5,
+    maxHeight: '80%', // Ajusta la altura máxima del contenido si es necesario
   },
 });

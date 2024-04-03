@@ -1,21 +1,13 @@
 import { StyleSheet } from 'react-native';
 import { Text, View, } from '@/components/Themed';
 import WeatherWidget from '../components/clima'
+import CarouselComponent from '../components/Carrousel';
 
 export default function TabOneScreen() {
   return (
     <View style={styles.container}>
-      <View>
-        <WeatherWidget />
-      </View>
-      <View style={styles.separator} lightColor="#eee" darkColor="rgba(255,255,255,0.1)" />
-      <Text style={styles.title}>SENSORES</Text>
-      <Text style={styles.title2}>Sensor baño:</Text>
-      <Text style={styles.title2}>Sensor regadera:</Text>
-      <Text style={styles.title2}>Sensor lavamanos:</Text>
-      <Text style={styles.title2}>Sensor Algibe:</Text>
-      <View style={styles.separator} lightColor="#eee" darkColor="rgba(255,255,255,0.1)" />
-      
+      <WeatherWidget />
+      <CarouselComponent/>
     </View>
     
   );
@@ -23,9 +15,7 @@ export default function TabOneScreen() {
 
 const styles = StyleSheet.create({
   container: {
-    flex: 1,
-    alignItems: 'center',
-    justifyContent: 'center',
+    flex: 1
   },
   title: {
     fontSize: 20,
