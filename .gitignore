@@ -396,3 +396,14 @@ FodyWeavers.xsd
 
 # JetBrains Rider
 *.sln.iml
+
+node_modules/
+# Archivos temporales
+tmp/
+*.tmp
+# Archivos de configuración específicos del IDE
+.idea/
+# Archivos de configuración de npm
+.npmrc
+# Archivos de configuración de Yarn
+.yarnrc
