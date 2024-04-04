@@ -3,6 +3,7 @@ import { Text, View, } from '@/components/Themed';
 import WeatherWidget from '../components/clima'
 import CarouselComponent from '../components/Carrousel';
 
+
 export default function TabOneScreen() {
   return (
     <View style={styles.container}>
@@ -30,7 +31,9 @@ const styles = StyleSheet.create({
     textAlign: 'center', // Centra el texto horizontalmente
   },
   container: {
-    flex: 1
+    flex: 1,
+    padding: 20,
+    backgroundColor: '#f5f5f5',
   },
   title: {
     fontSize: 20,
