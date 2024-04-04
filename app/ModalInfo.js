@@ -1,6 +1,7 @@
 // ModalInfo.js
 import React, { useEffect, useState } from 'react';
 import { Modal, Button, View, Text, StyleSheet, ScrollView } from 'react-native';
+import Markdown from 'react-native-markdown-display';
 
 export default function ModalInfo({ modalVisible, setModalVisible, sensor, selectedDate }) {
   const [resultIA, setResultIA] = useState('');
@@ -62,8 +63,11 @@ export default function ModalInfo({ modalVisible, setModalVisible, sensor, selec
       if (result && result.candidates && result.candidates.length > 0) {
         const text = result.candidates[0].content.parts[0].text;
         console.log(text);
+        /*
         mensajeConSaltosDeLinea = text.replace(/\\n/g, '\n');
         setResultIA(mensajeConSaltosDeLinea);
+        */
+        setResultIA(text);
       } else {
           console.log("Ha ocurrido un error con la API");
           setResultIA('');
@@ -82,10 +86,11 @@ export default function ModalInfo({ modalVisible, setModalVisible, sensor, selec
     >
       <View style={styles.modalContainer}>
         <ScrollView style={styles.modalContent}>
-          <Text>
+          <Markdown>
             {resultIA}
-          </Text>
-          <Button title="Cerrar" onPress={() => setModalVisible(false)} />
+          </Markdown>
+          <Button title="Cerrar" style={styles.btnClose} onPress={() => setModalVisible(false)} />
+          <View style={styles.separador} />
         </ScrollView>
       </View>
     </Modal>
@@ -93,6 +98,13 @@ export default function ModalInfo({ modalVisible, setModalVisible, sensor, selec
 }
 
 const styles = StyleSheet.create({
+  separador: {
+    marginVertical: 15,
+  },
+  btnClose: {
+    marginBottom: 20,
+    paddingBottom: 20
+  },
   modalContainer: {
     flex: 1,
     justifyContent: 'center',
@@ -104,7 +116,6 @@ const styles = StyleSheet.create({
     padding: 20,
     margin: 0,
     borderRadius: 10,
-    minHeight: '10%',
     maxHeight: '80%', // Ajusta la altura máxima del contenido si es necesario
   },
 });

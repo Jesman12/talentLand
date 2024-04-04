@@ -5,8 +5,6 @@ import { Stack } from 'expo-router';
 import * as SplashScreen from 'expo-splash-screen';
 import React, { useEffect } from 'react';
 import { useColorScheme } from '@/components/useColorScheme';
-import { Alert } from 'react-native';
-import messaging from '@react-native-firebase/messaging';
 
 
 export {
@@ -22,60 +20,6 @@ export const unstable_settings = {
 // Prevent the splash screen from auto-hiding before asset loading is complete.
 SplashScreen.preventAutoHideAsync();
 
-/*
-const requestUserPermission = async () => {
-  const authStatus = await messaging().requestPermission();
-  const enabled =
-    authStatus === messaging.AuthorizationStatus.AUTHORIZED ||
-    authStatus === messaging.AuthorizationStatus.PROVISIONAL;
-
-  if (enabled) {
-    console.log('Authorization status:', authStatus);
-  }
-}
-
-React.useEffect(() => {
-  if(requestUserPermission()){
-    messaging().getToken().then(token => {
-      console.log(token);
-    });
-  } else {
-    console.log("failde token status", authStatus);
-  }
-
-  // Check whether an initial notification is available
-  messaging()
-    .getInitialNotification()
-    .then( async (remoteMessage) => {
-      if (remoteMessage) {
-        console.log(
-          'Notification caused app to open from quit state:',
-          remoteMessage.notification,
-        );
-      }
-    });
-
-   // Assume a message-notification contains a "type" property in the data payload of the screen to open
-
-  messaging().onNotificationOpenedApp(async (remoteMessage) => {
-    console.log(
-      'Notification caused app to open from background state:',
-      remoteMessage.notification,
-    );
-  }); 
-
-  // Register background handler
-  messaging().setBackgroundMessageHandler(async remoteMessage => {
-    console.log('Message handled in the background!', remoteMessage);
-  });
-
-  const unsubscribe = messaging().onMessage(async remoteMessage => {
-    Alert.alert('A new FCM message arrived!', JSON.stringify(remoteMessage));
-  });
-
-  return unsubscribe;
-}, [])
-*/
 export default function RootLayout() {
   const [loaded, error] = useFonts({
     SpaceMono: require('../assets/fonts/SpaceMono-Regular.ttf'),
@@ -107,7 +51,7 @@ function RootLayoutNav() {
     <ThemeProvider value={colorScheme === 'dark' ? DarkTheme : DefaultTheme}>
       <Stack>
         <Stack.Screen name="(tabs)" options={{ headerShown: false }} />
-        <Stack.Screen name="modal" options={{ presentation: 'modal' }} />
+        <Stack.Screen name="modal" options={{ presentation: 'modal', title: 'CONFIGURACIÓN' }} />
       </Stack>
     </ThemeProvider>
   );

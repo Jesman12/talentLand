@@ -1,8 +1,9 @@
 import React, { useState, useEffect } from 'react';
-import { Dimensions, StyleSheet, Picker, Button, Pressable } from 'react-native';
+import { Dimensions, StyleSheet, Button, Pressable } from 'react-native';
 import { Text, View } from '@/components/Themed';
 import { LineChart } from 'react-native-chart-kit';
 import ModalInfo from '../ModalInfo'
+import { Picker } from '@react-native-picker/picker';
 
 export default function TabTwoScreen() {
   const [selectedDate, setSelectedDate] = useState('2024-04-02');
@@ -54,7 +55,6 @@ export default function TabTwoScreen() {
       <Picker
         selectedValue={selectedDate}
         onValueChange={(itemValue) => setSelectedDate(itemValue)}
-        style={{ height: 50, width: 200 }}
       >
         <Picker.Item label="2024-04-01" value="2024-04-01" />
         <Picker.Item label="2024-04-02" value="2024-04-02" />
@@ -120,12 +120,11 @@ export default function TabTwoScreen() {
             yAxisLabel="L/m"
             yAxisInterval={1} // optional, defaults to 1
             chartConfig={{
-              backgroundGradientFrom: "#1E2923",
-              backgroundGradientFromOpacity: 0,
-              backgroundGradientTo: "#08130D",
-              backgroundGradientToOpacity: 0.5,
+              backgroundColor: "#e26a00",
+              backgroundGradientFrom: "#020024",
+              backgroundGradientTo: "#090979",
               decimalPlaces: 2, // optional, defaults to 2dp
-              color: (opacity = 1) => `rgba(255, 255, 255, ${opacity})`,
+              color: (opacity = 100) => `rgba(0, 212, 155, 100)`,
               labelColor: (opacity = 1) => `rgba(255, 255, 255, ${opacity})`,
               style: {
                 borderRadius: 16
